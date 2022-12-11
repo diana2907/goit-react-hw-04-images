@@ -16,7 +16,6 @@ export class App extends Component {
   };
 
   handleFormSubmit = valueQuery => {
-    console.log(this.props.images);
     this.setState({ valueQuery, page: 1 });
   };
 

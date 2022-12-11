@@ -1,11 +1,6 @@
 import css from 'components/Modal/Modal.module.css';
 
-export const Modal = ({
-  image,
-  description,
-  closeModal,
-  closeModalOverlay,
-}) => {
+export const Modal = ({ image, description, closeModalOverlay }) => {
   return (
     <div className={css.overlay} onClick={closeModalOverlay}>
       <div className={css.modal}>
