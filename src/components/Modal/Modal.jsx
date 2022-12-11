@@ -5,9 +5,6 @@ export const Modal = ({ image, description, closeModal }) => {
     <div className={css.overlay} onClick={closeModal}>
       <div className={css.modal}>
         <img className={css.img} src={image} alt={description} />
-        <button className={css.btn} type="button" onClick={closeModal}>
-          X
-        </button>
       </div>
     </div>
   );

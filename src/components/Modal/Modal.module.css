@@ -16,7 +16,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    /* padding: 20px; */
     height: 350px;
     max-width: 700px;
  
@@ -26,23 +26,6 @@
     border-radius: 4px;
     }
   
-  .btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-  
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.7);
-    background-color: rgb(214, 235, 226);
-font-weight: 700;
- }
-
 
  .img {
   display: grid;
