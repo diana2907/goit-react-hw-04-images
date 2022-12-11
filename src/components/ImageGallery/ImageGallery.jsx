@@ -1,11 +1,12 @@
 import { fetchImages } from 'components/FetchImages/FetchImages';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Component } from 'react';
+import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
 import css from 'components/ImageGallery/ImageGallery.module.css';
 import { Loader } from 'components/Loader/Loader';
 
 export class ImageGallery extends Component {
-  state = { images: null, loading: false };
+  state = { images: [], loading: false };
 
   componentDidUpdate(prevProps, prevState) {
     const nextValue = this.props.valueQuery;
@@ -17,7 +18,7 @@ export class ImageGallery extends Component {
     if (prevValue !== nextValue || prevPage !== nextPage) {
       this.setState({ loading: true });
       if (prevValue !== nextValue) {
-        this.setState({ images: null });
+        this.setState({ images: [] });
       }
       fetchImages(nextValue, nextPage).then(image => {
         if (!prevState.images || prevValue !== nextValue) {
@@ -34,10 +35,11 @@ export class ImageGallery extends Component {
 
   render() {
     const { images, loading } = this.state;
+    const { onClick } = this.props;
     return (
       <>
         <ul className={css.gallery}>
-          {images &&
+          {images.length > 0 &&
             images.map(image => (
               <li className="gallery-item" key={image.id}>
                 <ImageGalleryItem image={image} />
@@ -45,6 +47,7 @@ export class ImageGallery extends Component {
             ))}
         </ul>
         {loading && <Loader />}
+        {images.length !== 0 && <ButtonLoadMore onClick={onClick} />}
       </>
     );
   }

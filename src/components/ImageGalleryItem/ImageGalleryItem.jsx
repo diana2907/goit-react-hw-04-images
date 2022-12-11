@@ -12,6 +12,12 @@ export class ImageGalleryItem extends Component {
     });
   };
 
+  closeClickOverlay = evt => {
+    if (evt.currentTarget === evt.target) {
+      this.toggleModal();
+    }
+  };
+
   render() {
     const { isModalOpen } = this.state;
 
@@ -29,6 +35,7 @@ export class ImageGalleryItem extends Component {
         {isModalOpen && (
           <Modal
             closeModal={this.toggleModal}
+            closeModalOverlay={this.closeClickOverlay}
             image={largeImageURL}
             description={tags}
           />

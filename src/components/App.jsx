@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { ButtonLoadMore } from './ButtonLoadMore/ButtonLoadMore';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { SearchBar } from './Searchbar/Searchbar';
 
@@ -17,6 +16,7 @@ export class App extends Component {
   };
 
   handleFormSubmit = valueQuery => {
+    console.log(this.props.images);
     this.setState({ valueQuery, page: 1 });
   };
 
@@ -27,11 +27,8 @@ export class App extends Component {
         <ImageGallery
           page={this.state.page}
           valueQuery={this.state.valueQuery}
+          onClick={this.handleMoreImage}
         />
-        {this.state.page > 0 && (
-          <ButtonLoadMore onClick={this.handleMoreImage} />
-        )}
-
         <ToastContainer />
       </div>
     );
