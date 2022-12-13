@@ -24,9 +24,6 @@ export class App extends Component {
 
     if (prevValue !== nextValue || prevPage !== nextPage) {
       this.setState({ loading: true });
-      if (prevValue !== nextValue) {
-        this.setState({ images: [] });
-      }
       fetchImages(nextValue, nextPage).then(image => {
         const imageArr = image.data.hits;
         if (!prevState.images || prevValue !== nextValue) {
@@ -53,7 +50,13 @@ export class App extends Component {
   };
 
   handleFormSubmit = valueQuery => {
-    this.setState({ valueQuery, page: 1 });
+    this.setState({
+      valueQuery,
+      page: 1,
+      images: [],
+      loading: false,
+      showBtn: false,
+    });
   };
 
   render() {
