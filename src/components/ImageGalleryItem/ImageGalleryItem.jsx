@@ -1,46 +1,38 @@
 import { Modal } from 'components/Modal/Modal';
-import { Component } from 'react';
+import { useState } from 'react';
 import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
-export class ImageGalleryItem extends Component {
-  state = {
-    isModalOpen: false,
+
+export function ImageGalleryItem({
+  image: { webformatURL, tags, largeImageURL },
+}) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
-  toggleModal = () => {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen,
-    });
-  };
-
-  closeClickOverlay = evt => {
+  const closeClickOverlay = evt => {
     if (evt.currentTarget === evt.target) {
-      this.toggleModal();
+      toggleModal();
     }
   };
 
-  render() {
-    const { isModalOpen } = this.state;
-
-    const {
-      image: { webformatURL, tags, largeImageURL },
-    } = this.props;
-    return (
-      <>
-        <img
-          className={css.img}
-          src={webformatURL}
-          alt={tags}
-          onClick={this.toggleModal}
+  return (
+    <>
+      <img
+        className={css.img}
+        src={webformatURL}
+        alt={tags}
+        onClick={toggleModal}
+      />
+      {isModalOpen && (
+        <Modal
+          closeModal={toggleModal}
+          closeModalOverlay={closeClickOverlay}
+          image={largeImageURL}
+          description={tags}
         />
-        {isModalOpen && (
-          <Modal
-            closeModal={this.toggleModal}
-            closeModalOverlay={this.closeClickOverlay}
-            image={largeImageURL}
-            description={tags}
-          />
-        )}
-      </>
-    );
-  }
+      )}
+    </>
+  );
 }

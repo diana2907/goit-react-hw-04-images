@@ -1,80 +1,55 @@
-import { Component } from 'react';
 import { SearchBar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { fetchImages } from 'components/FetchImages/FetchImages';
 import { Loader } from 'components/Loader/Loader';
 import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
 import { ToastContainer } from 'react-toastify';
+import { useState, useEffect } from 'react';
 
-export class App extends Component {
-  state = {
-    valueQuery: '',
-    images: [],
-    loading: false,
-    page: 0,
-    showBtn: false,
-  };
+export function App() {
+  const [valueQuery, setValueQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [showBtn, setShowBtn] = useState(false);
 
-  componentDidUpdate(_, prevState) {
-    const nextValue = this.state.valueQuery;
-    const prevValue = prevState.valueQuery;
-
-    const nextPage = this.state.page;
-    const prevPage = prevState.page;
-
-    if (prevValue !== nextValue || prevPage !== nextPage) {
-      this.setState({ loading: true });
-      fetchImages(nextValue, nextPage).then(image => {
+  useEffect(() => {
+    if (page) {
+      setLoading(true);
+      fetchImages(valueQuery, page).then(image => {
         const imageArr = image.data.hits;
-        if (!prevState.images || prevValue !== nextValue) {
-          this.setState({ images: imageArr });
+        setImages(prevState => [...prevState, ...imageArr]);
+        if (page < image.data.totalHits / 12) {
+          setShowBtn(true);
         } else {
-          this.setState({
-            images: [...prevState.images, ...imageArr],
-          });
+          setShowBtn(false);
         }
-        if (nextPage < image.data.totalHits / 12) {
-          this.setState({ showBtn: true });
-        } else {
-          this.setState({ showBtn: false });
-        }
-        this.setState({ loading: false });
+        setLoading(false);
       });
     }
-  }
+  }, [valueQuery, page]);
 
-  handleMoreImage = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleMoreImage = () => {
+    setPage(prevState => prevState + 1);
   };
 
-  handleFormSubmit = valueQuery => {
-    this.setState({
-      valueQuery,
-      page: 1,
-      images: [],
-      loading: false,
-      showBtn: false,
-    });
+  const handleFormSubmit = valueQuery => {
+    setValueQuery(valueQuery);
+    setImages([]);
+    setPage(1);
+    setLoading(false);
+    setShowBtn(false);
   };
 
-  render() {
-    const { loading, images, showBtn } = this.state;
-    return (
-      <div>
-        <SearchBar onSubmit={this.handleFormSubmit} />
-        {images.length > 0 && (
-          <ImageGallery
-            images={this.state.images}
-            page={this.state.page}
-            valueQuery={this.state.valueQuery}
-          />
-        )}
-        {loading && <Loader />}
-        {showBtn && <ButtonLoadMore onClick={this.handleMoreImage} />}
-        <ToastContainer />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <SearchBar onSubmit={handleFormSubmit} />
+      {images.length > 0 && (
+        <ImageGallery images={images} page={page} valueQuery={valueQuery} />
+      )}
+      {loading && <Loader />}
+      {showBtn && <ButtonLoadMore onClick={handleMoreImage} />}
+      <ToastContainer />
+    </div>
+  );
 }
